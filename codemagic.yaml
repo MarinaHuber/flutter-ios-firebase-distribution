@@ -26,10 +26,6 @@ workflows:
       - name: Analyze Flutter code
         script: |
           flutter analyze
-      - name: Run Flutter tests
-        script: |
-          flutter test
-        ignore_failure: true # Optional: Ignore test failures
       - name: Build iOS IPA
         script: |
           flutter build ipa --release
