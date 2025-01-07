@@ -19,7 +19,7 @@ workflows:
       - name: Check environment variables
         script: echo $FIREBASE_IOS_ALIAS
       - name: Set up Firebase Distribution Key
-        script: echo $FIREBASE_IOS_JSON | base64 --decode > /ios/firebase_key.json
+        script: echo $FIREBASE_IOS_JSON | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
       - name: Get Flutter packages
         script: |
           flutter pub get
