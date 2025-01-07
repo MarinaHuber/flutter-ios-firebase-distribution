@@ -1,7 +1,7 @@
 workflows:
   ios-firebase:
     name: iOS Firebase Distribution
-    max_build_duration: 100
+    max_build_duration: 120  
     environment:
       flutter: stable
       xcode: latest
@@ -9,6 +9,8 @@ workflows:
       groups:
         - FIREBASE_IOS # Group to associate the environment with
       vars:
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"   
         FIREBASE_IOS_APP_ID: $FIREBASE_IOS_APP_ID # Replace with your Firebase iOS App ID
         BUNDLE_ID: "com.codemagicFirebaseAppDistribution.io" # Replace with your app's bundle ID
         FIREBASE_IOS_JSON: $FIREBASE_IOS_JSON # Base64-encoded Firebase key
@@ -35,13 +37,14 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       firebase:
-        token: $FIREBASE_AUTH_TOKEN # Add the Firebase token securely
-        apps:
-          - appId: $FIREBASE_IOS_APP_ID
-            paths:
-              - build/ios/ipa/*.ipa
-        groups:
-          - iosTesters # Replace with your Firebase tester group name
+        firebase_token: $FIREBASE_TOKEN # Add the Firebase token securely
+        ios:
+            app_id: $FIREBASE_IOS_APP_ID
+            groups:
+             - iosTesters
       email:
         recipients:
           - huber.marina@gmail.com
+        notify:
+           success: true 
+           failure: false 
