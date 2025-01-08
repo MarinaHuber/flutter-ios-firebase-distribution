@@ -3,9 +3,6 @@ workflows:
     name: iOS Firebase Distribution
     max_build_duration: 120  
     environment:
-      ios_signing:
-        distribution_type: ad_hoc
-        bundle_identifier: com.codemagicFirebaseAppDistribution.io
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -15,8 +12,11 @@ workflows:
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"   
         FIREBASE_IOS_APP_ID: $FIREBASE_IOS_APP_ID
-        BUNDLE_ID: "com.codemagicFirebaseAppDistribution.io" 
+        BUNDLE_ID: "com.codemagicFirebaseAppDistribution.io"
         FIREBASE_IOS_KEY: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KCTxrZXk+QVBJX0tFWTwva2V5PgoJPHN0cmluZz5BSXphU3lCUGp3UzVCVm8zdWRudVhUVEM4NVBTdHRXWFNpbDhiMFE8L3N0cmluZz4KCTxrZXk+R0NNX1NFTkRFUl9JRDwva2V5PgoJPHN0cmluZz43OTA0MzI0MDUzMjc8L3N0cmluZz4KCTxrZXk+UExJU1RfVkVSU0lPTjwva2V5PgoJPHN0cmluZz4xPC9zdHJpbmc+Cgk8a2V5PkJVTkRMRV9JRDwva2V5PgoJPHN0cmluZz5jb20uY29kZW1hZ2ljRmlyZWJhc2VBcHBEaXN0cmlidXRpb24uaW88L3N0cmluZz4KCTxrZXk+UFJPSkVDVF9JRDwva2V5PgoJPHN0cmluZz50ZXN0LWZsdXR0ZXItZGVtby04NmIxMjwvc3RyaW5nPgoJPGtleT5TVE9SQUdFX0JVQ0tFVDwva2V5PgoJPHN0cmluZz50ZXN0LWZsdXR0ZXItZGVtby04NmIxMi5maXJlYmFzZXN0b3JhZ2UuYXBwPC9zdHJpbmc+Cgk8a2V5PklTX0FEU19FTkFCTEVEPC9rZXk+Cgk8ZmFsc2U+PC9mYWxzZT4KCTxrZXk+SVNfQU5BTFlUSUNTX0VOQUJMRUQ8L2tleT4KCTxmYWxzZT48L2ZhbHNlPgoJPGtleT5JU19BUFBJTlZJVEVfRU5BQkxFRDwva2V5PgoJPHRydWU+PC90cnVlPgoJPGtleT5JU19HQ01fRU5BQkxFRDwva2V5PgoJPHRydWU+PC90cnVlPgoJPGtleT5JU19TSUdOSU5fRU5BQkxFRDwva2V5PgoJPHRydWU+PC90cnVlPgoJPGtleT5HT09HTEVfQVBQX0lEPC9rZXk+Cgk8c3RyaW5nPjE6NzkwNDMyNDA1MzI3Omlvczo4NjgzZDM4MzkwMTBiZTg4ZjAxNzNhPC9zdHJpbmc+CjwvZGljdD4KPC9wbGlzdD4=" # Base64-encoded Firebase key
+      ios_signing:
+        distribution_type: ad_hoc
+        bundle_identifier: com.codemagicFirebaseAppDistribution.io
     scripts:
       - name: Check environment variables
         script: echo $FIREBASE_IOS_ALIAS
@@ -30,9 +30,11 @@ workflows:
           flutter analyze
       - name: Build iOS IPA
         script: |
-          flutter build ipa --release
+          flutter build ipa --debug
     artifacts:
       - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
     publishing:
       firebase:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
