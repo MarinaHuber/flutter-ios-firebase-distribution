@@ -1,0 +1,1 @@
+ /Users/marina/Desktop/Babies-repos/flutter-ios-firebase-distribution/.dart_tool/flutter_build/79ca66fb20f6bb88b3a647c76a3d7239/native_assets.yaml: 
