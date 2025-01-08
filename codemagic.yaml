@@ -36,7 +36,7 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       firebase:
-        firebase_token: $FIREBASE_TOKEN # Add the Firebase token securely
+        firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
         ios:
             app_id: $FIREBASE_IOS_APP_ID
             groups:
@@ -44,6 +44,7 @@ workflows:
       email:
         recipients:
           - huber.marina@gmail.com
+          - nihal@nevercode.io
         notify:
            success: true 
            failure: false 
