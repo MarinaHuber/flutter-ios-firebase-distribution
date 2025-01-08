@@ -45,9 +45,9 @@
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///Users/marina/.pub-cache/hosted/pub.dev/firebase_core-3.10.0",
+      "rootUri": "file:///Users/marina/.pub-cache/hosted/pub.dev/firebase_core-2.32.0",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "2.18"
     },
     {
       "name": "firebase_core_platform_interface",
@@ -206,7 +206,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2025-01-07T23:30:47.781479Z",
+  "generated": "2025-01-08T11:43:05.560779Z",
   "generator": "pub",
   "generatorVersion": "3.6.0",
   "flutterRoot": "file:///opt/homebrew/Caskroom/flutter/3.27.1/flutter",
