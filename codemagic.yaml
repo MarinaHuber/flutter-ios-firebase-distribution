@@ -63,7 +63,6 @@ workflows:
           app_id: app-1-790432405327-ios-8683d3839010be88f0173a
           groups:
             - iosTesters
-          release_notes: "$RELEASE_NOTES"  # Use the plain string for release notes
       email:
         recipients:
           - huber.marina@gmail.com
