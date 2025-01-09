@@ -2,8 +2,6 @@ workflows:
   ios-firebase:
     name: iOS Firebase Distribution
     max_build_duration: 120
-    integrations:
-      app_store_connect: API key apple
     environment:
       flutter: stable
       xcode: latest
@@ -15,7 +13,6 @@ workflows:
         XCODE_SCHEME: "Runner"   
         BUNDLE_ID: "com.codemagicFirebaseAppDistribution.io"
         APP_STORE_ID: 6740295135 
-        FIREBASE_IOS_KEY: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KCTxrZXk+QVBJX0tFWTwva2V5PgoJPHN0cmluZz5BSXphU3lCUGp3UzVCVm8zdWRudVhUVEM4NVBTdHRXWFNpbDhiMFE8L3N0cmluZz4KCTxrZXk+R0NNX1NFTkRFUl9JRDwva2V5PgoJPHN0cmluZz43OTA0MzI0MDUzMjc8L3N0cmluZz4KCTxrZXk+UExJU1RfVkVSU0lPTjwva2V5PgoJPHN0cmluZz4xPC9zdHJpbmc+Cgk8a2V5PkJVTkRMRV9JRDwva2V5PgoJPHN0cmluZz5jb20uY29kZW1hZ2ljRmlyZWJhc2VBcHBEaXN0cmlidXRpb24uaW88L3N0cmluZz4KCTxrZXk+UFJPSkVDVF9JRDwva2V5PgoJPHN0cmluZz50ZXN0LWZsdXR0ZXItZGVtby04NmIxMjwvc3RyaW5nPgoJPGtleT5TVE9SQUdFX0JVQ0tFVDwva2V5PgoJPHN0cmluZz50ZXN0LWZsdXR0ZXItZGVtby04NmIxMi5maXJlYmFzZXN0b3JhZ2UuYXBwPC9zdHJpbmc+Cgk8a2V5PklTX0FEU19FTkFCTEVEPC9rZXk+Cgk8ZmFsc2U+PC9mYWxzZT4KCTxrZXk+SVNfQU5BTFlUSUNTX0VOQUJMRUQ8L2tleT4KCTxmYWxzZT48L2ZhbHNlPgoJPGtleT5JU19BUFBJTlZJVEVfRU5BQkxFRDwva2V5PgoJPHRydWU+PC90cnVlPgoJPGtleT5JU19HQ01fRU5BQkxFRDwva2V5PgoJPHRydWU+PC90cnVlPgoJPGtleT5JU19TSUdOSU5fRU5BQkxFRDwva2V5PgoJPHRydWU+PC90cnVlPgoJPGtleT5HT09HTEVfQVBQX0lEPC9rZXk+Cgk8c3RyaW5nPjE6NzkwNDMyNDA1MzI3Omlvczo4NjgzZDM4MzkwMTBiZTg4ZjAxNzNhPC9zdHJpbmc+CjwvZGljdD4KPC9wbGlzdD4=" # Base64-encoded Firebase key
       ios_signing:
         distribution_type: ad_hoc
         bundle_identifier: com.codemagicFirebaseAppDistribution.io
@@ -54,16 +51,12 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
     publishing:
-      app_store_connect:              
-        auth: integration
-        submit_to_testflight: false
-        submit_to_app_store: false
       firebase:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
-        ios:
-            app_id: app-1-790432405327-ios-8683d3839010be88f0173a
-            groups:
-             - iosTesters
+        app_id: app-1-790432405327-ios-8683d3839010be88f0173a
+        groups:
+          - iosTesters
+        release_notes: "Automated build from Codemagic"
       email:
         recipients:
           - huber.marina@gmail.com
