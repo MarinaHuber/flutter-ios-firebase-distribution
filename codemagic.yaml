@@ -35,12 +35,12 @@ workflows:
           keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $CM_CERTIFICATE_PASSWORD
       - name: Increment build number
         script: |
-          # increment build number
           #!/bin/sh
           set -e
           set -x
           cd $FCI_BUILD_DIR/ios
-          agvtool new-version -all $(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
+          agvtool new-version -all $NEW_BUILD_NUMBER
       - name: Set up code signing settings on Xcode project
         script: |
           xcode-project use-profiles
@@ -66,8 +66,6 @@ workflows:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
         ios:
           app_id: app-1-790432405327-ios-8683d3839010be88f0173a
-          groups:
-            - iosTesters
       email:
         recipients:
           - huber.marina@gmail.com
