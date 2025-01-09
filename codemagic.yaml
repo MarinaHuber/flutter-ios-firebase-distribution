@@ -46,6 +46,12 @@ workflows:
         script: | 
           set -e 
           echo $FIREBASE_IOS_KEY > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist  
+      - name: Read release notes
+        script: |
+          echo "Reading release notes from release_notes.txt"
+          RELEASE_NOTES=$(cat release_notes.txt)
+          echo "Release notes: $RELEASE_NOTES"
+          echo "$RELEASE_NOTES" > $CM_BUILD_DIR/release_notes.txt  # Save to a temporary file if needed
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -53,11 +59,10 @@ workflows:
     publishing:
       firebase:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
-        ios: 
-           app_id: app-1-790432405327-ios-8683d3839010be88f0173a
-           groups:
-             - iosTesters
-      release_notes: "Automated build from Codemagic"
+        ios:
+          app_id: app-1-790432405327-ios-8683d3839010be88f0173a
+          groups:
+            - iosTesters
       email:
         recipients:
           - huber.marina@gmail.com
