@@ -50,8 +50,8 @@ workflows:
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
-          --build-name=1.0.0 \
-          --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+          --build-name=6.0.0 \
+          --build-number=6
           --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration
         script: | 
