@@ -57,7 +57,7 @@ workflows:
            app_id: app-1-790432405327-ios-8683d3839010be88f0173a
            groups:
              - iosTesters
-           release_notes: "Automated build from Codemagic"
+      release_notes: "Automated build from Codemagic"
       email:
         recipients:
           - huber.marina@gmail.com
