@@ -50,13 +50,13 @@ workflows:
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
-          --build-name=1.0.0 \
-          --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+          --build-name=6.0.0 \
+          --build-number=6
           --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration
         script: | 
           set -e 
-          echo $FIREBASE_IOS_KEY > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist  
+          echo $FIREBASE_SECURE | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist  
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
