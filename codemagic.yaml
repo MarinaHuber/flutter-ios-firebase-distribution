@@ -11,7 +11,7 @@ workflows:
         - APPSTORE_CRED
         - FIREBASE_IOS
       vars:
-        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"   
         BUNDLE_ID: "com.codemagicFirebaseAppDistribution.io"
         APP_STORE_ID: 6740295135 
