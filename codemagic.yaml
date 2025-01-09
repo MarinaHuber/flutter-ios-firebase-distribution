@@ -49,7 +49,7 @@ workflows:
       - name: Read release notes
         script: |
           echo "Reading release notes from release_notes.txt"
-          RELEASE_NOTES=$(cat release_notes.txt)
+          RELEASE_NOTES=$(cat release_notes.txt | tr '\n' ' ')  # Convert newlines to spaces
           echo "Release notes: $RELEASE_NOTES"
           echo "$RELEASE_NOTES" > $CM_BUILD_DIR/release_notes.txt  # Save to a temporary file if needed
     artifacts:
@@ -63,6 +63,7 @@ workflows:
           app_id: app-1-790432405327-ios-8683d3839010be88f0173a
           groups:
             - iosTesters
+          release_notes: "$RELEASE_NOTES"  # Use the plain string for release notes
       email:
         recipients:
           - huber.marina@gmail.com
