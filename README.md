@@ -1,2 +1,3 @@
 # flutter-ios-firebase-distribution
-basic demo
+Steps to prepare.
+Instructions for publishing iOS Flutter app to Firebase Distribution app via Codemagic.
