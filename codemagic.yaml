@@ -1,71 +1,85 @@
 workflows:
-  ios-release:
-    name: iOS release
-    instance_type: mac_mini_m2
+  ios-firebase:
+    name: iOS Firebase Distribution
     max_build_duration: 120
-    integrations:
-      app_store_connect: codemagic
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: io.flutter.app.FlutterApplication
-      vars:
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        APP_STORE_APP_ID: 1555555551 # <-- Put the app id number here. This is found in App Store Connect > App > General > App Information
-        XCODE_SCHEME: _   # <-- Put Your Xcode sceheme here
-        BUNDLE_ID: io.flutter.app.FlutterApplication
-        ENTRY_POINT: _    # <-- Put Your Entry point to your flutter application here
-      flutter: stable
+        distribution_type: ad_hoc
+        bundle_identifier: com.codemagicFirebaseAppDistribution.io
+      flutter: stable # specify version
       xcode: latest
       cocoapods: default
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: "main"
-          include: true
-          source: true
+      groups:
+        - FIREBASE_IOS
+        - MANUAL_CODE_SIGN
+        - APPSTORE_CRED
+      vars:
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"   
+        BUNDLE_ID: "com.codemagicFirebaseAppDistribution.io"
+        APP_STORE_ID: 6740295135 
     scripts:
-      - name: Get Flutter Packages
+      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
-          flutter packages pub get
-      - name: Pod install
+          keychain initialize
+      - name: set up provisioning profiles
         script: |
-          find . -name "Podfile" -execdir pod install \;
-      - name: Set up code signing settings on Xcode project
+          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_HOME"
+          PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
+          echo ${CM_PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
+          echo "Saved provisioning profile $PROFILE_PATH"
+      - name: Add signing certificate to keychain
+        script: |
+          echo $CM_CERTIFICATE | base64 --decode > /tmp/certificate.p12
+          keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $CM_CERTIFICATE_PASSWORD
+      - name: Increment build number
+        script: |
+          set -e
+          set -x
+          cd $FCI_BUILD_DIR
+          # agvtool new-version -all $(($BUILD_NUMBER +1))
+          agvtool new-version -all $(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
         script: |
           xcode-project use-profiles
-      - name: Flutter build ipa and automatic versioning
+      - name: Get Flutter packages
         script: |
+          cd . && flutter packages pub get
+      - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
+        script: |
+          agvtool new-version -all $(($BUILD_NUMBER))
           flutter build ipa --release \
-          --build-name=1.0.0 \
-          --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
-          --export-options-plist=/Users/builder/export_options.plist \
-          --flavor="$XCODE_SCHEME" \
-          -t "$ENTRY_POINT"
+            --build-name=1.0.$BUILD_NUMBER \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+      - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
+        script: | 
+          set -e 
+          echo $FIREBASE_SECURE | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
+      app_store_connect:              
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+      firebase:
+        firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
+        ios: 
+          app_id: 1:790432405327:ios:8683d3839010be88f0173a
+          groups:
+            - iosTesters
       email:
         recipients:
-          - user_1@example.com
-          - user_2@example.com
+          - huber.marina@gmail.com
         notify:
-          success: true
-          failure: true
-      app_store_connect:
-        auth: integration
-        
-        # Configuration related to TestFlight (optional)
-        # Note: This action is performed during post-processing.
-        submit_to_testflight: true
-        beta_groups: # Specify the names of beta tester groups that will get access to the build once it has passed beta review.
-          - group name 1
-          - group name 2
-
-        # Configuration related to App Store (optional)
-        # Note: This action is performed during post-processing.
-        submit_to_app_store: false
+           success: false 
+           failure: false
+      app_store_connect:   # https://docs.codemagic.io/publishing-yaml/distribution              
+            api_key: $APP_STORE_CONNECT_PRIVATE_KEY         # Contents of the API key, can also reference environment variable such as $APP_STORE_CONNECT_PRIVATE_KEY
+            key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER       # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
+            issuer_id: $APP_STORE_CONNECT_ISSUER_ID         # Alphanumeric value that identifies who created the API key, can also reference environment variable such a
+            submit_to_testflight: true
+            submit_to_app_store: true      
