@@ -41,15 +41,36 @@ workflows:
           cd . && flutter packages pub get      
       - name: Flutter build ipa and automatic versioning # agvtool new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
         script: |
-          BUILD_NUMBER=4
+          echo "Starting version check..."
+          echo "Current Date: $(date)"
           
           cd ios
-          agvtool new-version -all $BUILD_NUMBER
+          echo "=== Current Directory ==="
+          pwd
+          echo "========================"
+          
+          echo "Checking Info.plist..."
+          CURRENT_BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" Runner/Info.plist || echo "48")
+          echo "Found build number in Info.plist: $CURRENT_BUILD_NUMBER"
+          
+          NEW_BUILD_NUMBER=$((CURRENT_BUILD_NUMBER + 1))
+          echo "Incrementing to new build number: $NEW_BUILD_NUMBER"
+          
+          echo "Updating version with agvtool..."
+          agvtool what-version
+          agvtool new-version -all $NEW_BUILD_NUMBER
+          echo "Version after update:"
+          agvtool what-version
+          
           cd ..
-
+          
+          echo "Building IPA with:"
+          echo "- Build name: 1.0.43"
+          echo "- Build number: $NEW_BUILD_NUMBER"
+          
           flutter build ipa --release \
             --build-name=1.0.43 \
-            --build-number=$BUILD_NUMBER \
+            --build-number=$NEW_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
