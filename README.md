@@ -30,7 +30,7 @@ Precise steps in order:
 
 - [x] Trouboleshoot if so ⤴️   
 
-### bash manual code signing script with ad hoc provisioning
+ - bash manual code signing script with ad hoc provisioning
 
 ``` exml bash for manual code signing with ad hoc provisioning
 
