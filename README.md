@@ -1,15 +1,15 @@
 # Installing Codemagic
 ### basic helper instructions
 
-## Task: Distribute Flutter iOS app via Firebase Distribution App with codemagic.yaml
+## <sup>Task:<sup> Distribute Flutter iOS app via Firebase Distribution App with codemagic.yaml
 This is an example project that shows how to build a iOS app with Codemagic CI/CD using manual iOS code signing. Please refer to the codemagic.yaml file in the root of the project. You will need a Codemagic.io account to use this example project. You can get started for free here:
 
 https://codemagic.io/signup
 
 ## Prerequisites for publishing
-_Codemagic.io account_ (free)
-_Apple developer account_ (not free)
-_App Store Connect App creation_ (not free)
+_Codemagic.io account_ (free)  
+_Apple developer account_ (not free)  
+_App Store Connect App creation_ (not free)  
 _Firebase account_ (free)
 
 Precise steps in order:
@@ -32,7 +32,7 @@ Precise steps in order:
 
 
 
-`` exml bash for manual code signing with ad hoc provisioning
+``` exml bash for manual code signing with ad hoc provisioning
 
           PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILES_HOME"
@@ -41,5 +41,6 @@ Precise steps in order:
           echo "Saved provisioning profile $PROFILE_PATH"
 
 ```
+  
 
-Happy building! :magic_wand:
+Happy building! ✨
