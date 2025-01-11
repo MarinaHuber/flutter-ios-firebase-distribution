@@ -42,20 +42,30 @@ workflows:
       - name: Flutter build ipa and automatic versioning # agvtool new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
         script: |
           cd ios
-          # Update the version number using agvtool
-          agvtool new-version -all $(($BUILD_NUMBER))
+
+          # Retrieve the latest build number from TestFlight and increment it
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID")
+          NEW_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
+
+          # Retrieve the current version from the Info.plist file
+          CURRENT_VERSION=$(defaults read $(pwd)/Runner/Info CFBundleShortVersionString)
+
+          # Optionally increment the minor or patch version dynamically (if required)
+          NEW_VERSION=$CURRENT_VERSION # Update this logic if version bumps are required
+
+          # Update the build number using agvtool
+          agvtool new-version -all $NEW_BUILD_NUMBER
+
+          # Ensure the version number is consistent in Info.plist
+          plutil -replace CFBundleShortVersionString -string "$NEW_VERSION" Runner/Info.plist
 
           # Navigate back to the project root directory
           cd ..
 
-          # Retrieve the latest build number from TestFlight and increment it
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID")
-          NEW_BUILD_NUMBER=$(($LATEST_BUILD_NUMBER + 1))
-
           # Build the Flutter iOS app
           flutter build ipa --release \
-            --build-name=1.0.0 \
-            --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+            --build-name=$NEW_VERSION \
+            --build-number=$NEW_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
