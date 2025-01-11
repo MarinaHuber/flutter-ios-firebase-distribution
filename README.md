@@ -28,9 +28,9 @@ Precise steps in order:
 
 - [x] Start filling codemagic.yaml scripts (build IPA, code sign, firebase setup...)
 
-- [x] Trouboleshoot if so ⤴️ 
+- [x] Trouboleshoot if so ⤴️   
 
-
+### bash manual code signing script with ad hoc provisioning
 
 ``` exml bash for manual code signing with ad hoc provisioning
 
