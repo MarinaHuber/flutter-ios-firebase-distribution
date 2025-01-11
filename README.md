@@ -30,7 +30,7 @@ Precise steps in order:
 
 - [x] Trouboleshoot if so ⤴️   
 
- - bash manual code signing script with ad hoc provisioning
+ - Used bash manual code signing script with ad hoc provisioning
 
 ``` exml bash for manual code signing with ad hoc provisioning
 
@@ -41,7 +41,7 @@ Precise steps in order:
           echo "Saved provisioning profile $PROFILE_PATH"
 
 ```
-- script Flutter build .ipa and automatic versioning *-agvtool* new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
+- Used script Flutter build for publishing top app store and firebase. *-agvtool* responsible for increasing the version number
 takes current TestFlight number to increment
 
 ```
@@ -63,17 +63,5 @@ takes current TestFlight number to increment
             --export-options-plist=/Users/builder/export_options.plist
 ```
 
-- script Flutter build without App store connection incrementing from .ipa
-
-``` 
-    CURRENT_BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" Runner/Info.plist)
-    NEW_BUILD_NUMBER=$((CURRENT_BUILD_NUMBER + 1))
-    agvtool new-version -all $NEW_BUILD_NUMBER
-    cd ..
-    
-    flutter build ipa --release \
-      --build-number=$NEW_BUILD_NUMBER \
-      --export-options-plist=/Users/builder/export_options.plist
-```  
 
 Happy building! ✨
