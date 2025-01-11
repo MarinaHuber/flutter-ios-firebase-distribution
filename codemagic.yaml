@@ -41,18 +41,10 @@ workflows:
           cd . && flutter packages pub get
       - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
         script: |
-          # Set up code signing settings on Xcode project
-          # -> $HOME/export_options.plist
-          xcode-project use-profiles
-
-          # Build
-          BUILD_NAME=$(echo $CM_TAG | sed 's/^v\(.*\)+\(.*\)-mobile-cm$/\1/')
-          BUILD_NUMBER=$(echo $CM_TAG | sed 's/^v\(.*\)+\(.*\)-mobile-cm$/\2/')
-          flutter build ipa \
-            --release \
-            --build-name=$BUILD_NAME \
-            --build-number=$BUILD_NUMBER \
-            --export-options-plist=$HOME/export_options.plist
+          flutter build ipa --release \
+            --build-name=1.0.0 \
+            --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+            --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
           set -e 
