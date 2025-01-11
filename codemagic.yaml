@@ -52,7 +52,7 @@ workflows:
             --build-name=1.0.$BUILD_NUMBER \
             --build-number=$BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
-    - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
+      - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
           set -e 
           echo $FIREBASE_SECURE | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
