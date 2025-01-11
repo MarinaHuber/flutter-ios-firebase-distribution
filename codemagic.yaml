@@ -39,20 +39,20 @@ workflows:
       - name: Get Flutter packages
         script: |
           cd . && flutter packages pub get
-      - name: Increment build number 
-        script: |
-          cd $CM_BUILD_DIR/ios
-          agvtool new-version -all $(($BUILD_NUMBER + 1)) 
       - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
         script: |
-          cd ios
-          agvtool new-version -all 1.0.$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
-          cd ..
-          
-          flutter build ipa --release
-            --build-name=1.0.$BUILD_NUMBER 
-            --build-number=$BUILD_NUMBER
-            --export-options-plist=/Users/builder/export_options.plist
+          # Set up code signing settings on Xcode project
+          # -> $HOME/export_options.plist
+          xcode-project use-profiles
+
+          # Build
+          BUILD_NAME=$(echo $CM_TAG | sed 's/^v\(.*\)+\(.*\)-mobile-cm$/\1/')
+          BUILD_NUMBER=$(echo $CM_TAG | sed 's/^v\(.*\)+\(.*\)-mobile-cm$/\2/')
+          flutter build ipa \
+            --release \
+            --build-name=$BUILD_NAME \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=$HOME/export_options.plist
       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
           set -e 

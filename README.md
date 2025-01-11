@@ -62,6 +62,6 @@ takes current TestFlight number to increment
             --build-number=$NEXT_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
 ```
-
+[Usefull blog](https://github.com/netoearth/markdown/blob/ae1d6468fd5d59dad3cea9be92afdfcaff23dc31/cicd/Flutter%20Continuous%20Integration%20%26%20Delivery%20(CICD)%20with%20Codemagic%20%20Codemagic%20Blog.md?plain=1#L203)
 
 Happy building! ✨
