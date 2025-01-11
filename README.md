@@ -41,6 +41,39 @@ Precise steps in order:
           echo "Saved provisioning profile $PROFILE_PATH"
 
 ```
-  
+- script Flutter build .ipa and automatic versioning *-agvtool* new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
+takes current TestFlight number to increment
+
+```
+      - name: Flutter build ipa and automatic versioning
+        script: |
+          # Get the next build number directly
+          NEXT_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
+          echo "Next build number will be: $NEXT_BUILD_NUMBER"
+          
+          # Set the build number in the iOS project
+          cd ios
+          agvtool new-version -all $NEXT_BUILD_NUMBER
+          cd ..
+
+          # Build IPA with the incremented build number
+          flutter build ipa --release \
+            --build-name=1.0.43 \
+            --build-number=$NEXT_BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+```
+
+- script Flutter build without App store connection incrementing from .ipa
+
+``` 
+    CURRENT_BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" Runner/Info.plist)
+    NEW_BUILD_NUMBER=$((CURRENT_BUILD_NUMBER + 1))
+    agvtool new-version -all $NEW_BUILD_NUMBER
+    cd ..
+    
+    flutter build ipa --release \
+      --build-number=$NEW_BUILD_NUMBER \
+      --export-options-plist=/Users/builder/export_options.plist
+```  
 
 Happy building! ✨
