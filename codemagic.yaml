@@ -41,21 +41,19 @@ workflows:
           cd . && flutter packages pub get      
       - name: Flutter build ipa and automatic versioning # agvtool new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
         script: |
-          echo "Starting build process..."
-          
-          # Get latest TestFlight build details
-          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$BUNDLE_ID")
-          LATEST_VERSION=$(app-store-connect get-latest-testflight-version "$BUNDLE_ID")
-          
-          echo "Found in TestFlight - Version: $LATEST_VERSION Build: $LATEST_BUILD"
-          
-          # Increment both
+          # Get latest TestFlight build number and increment
+          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID")
           NEW_BUILD=$((LATEST_BUILD + 1))
-          NEW_VERSION=$(echo $LATEST_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           
-          echo "Will build new version: $NEW_VERSION (Build: $NEW_BUILD)"
+          # Get latest version and increment patch number
+          LATEST_VERSION="1.0.$LATEST_BUILD"
+          NEW_VERSION="1.0.$NEW_BUILD"
+          
+          echo "Latest in TestFlight: Version $LATEST_VERSION (Build: $LATEST_BUILD)"
+          echo "Building new: Version $NEW_VERSION (Build: $NEW_BUILD)"
           
           cd ios
+          # Update build number only (not version) in Xcode project
           agvtool new-version -all $NEW_BUILD
           cd ..
           
