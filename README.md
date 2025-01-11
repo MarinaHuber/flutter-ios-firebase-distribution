@@ -16,8 +16,6 @@ Precise steps in order:
 
 - [x] Download Flutter sample project (Runner) from [Codemagic](https://github.com/codemagic-ci-cd/codemagic-sample-projects/tree/main/integrations/firebase-app-distribution)
 
-- [x] Install in Flutter firebase_core Cocoapod
-
 - [x] With app Bundle ID create iOS app in Firebase Console and download the [GoogleService.plist](https://medium.com/flutter-community/how-to-load-firebase-config-in-codemagic-with-environment-variables-e36e0378b7e6) file + c/p App ID number
 
 - [x] Get the SERVICE ACCOUNT setup with (Firebase Distribution App) ADMIN role -> download .json (TOKEN setup is deprecated)
@@ -40,27 +38,6 @@ Precise steps in order:
           echo ${CM_PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
           echo "Saved provisioning profile $PROFILE_PATH"
 
-```
-- Used script Flutter build for publishing top app store and firebase. *-agvtool* responsible for increasing the version number
-takes current TestFlight number to increment
-
-```
-      - name: Flutter build ipa and automatic versioning
-        script: |
-          # Get the next build number directly
-          NEXT_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
-          echo "Next build number will be: $NEXT_BUILD_NUMBER"
-          
-          # Set the build number in the iOS project
-          cd ios
-          agvtool new-version -all $NEXT_BUILD_NUMBER
-          cd ..
-
-          # Build IPA with the incremented build number
-          flutter build ipa --release \
-            --build-name=1.0.43 \
-            --build-number=$NEXT_BUILD_NUMBER \
-            --export-options-plist=/Users/builder/export_options.plist
 ```
 [Usefull blog](https://github.com/netoearth/markdown/blob/ae1d6468fd5d59dad3cea9be92afdfcaff23dc31/cicd/Flutter%20Continuous%20Integration%20%26%20Delivery%20(CICD)%20with%20Codemagic%20%20Codemagic%20Blog.md?plain=1#L203)
 
