@@ -35,14 +35,11 @@ workflows:
           keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $CM_CERTIFICATE_PASSWORD
       - name: Increment build number
         script: |
-          cd $FCI_BUILD_DIR/ios
-          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID")
-          NEW_BUILD=$((LATEST_BUILD + 1))
-          echo "Latest TestFlight build: $LATEST_BUILD"
-          echo "Setting new build number to: $NEW_BUILD"
-          agvtool new-version -all $NEW_BUILD
-          # Export the NEW_BUILD for the next step
-          echo "NEW_BUILD=$NEW_BUILD" >> $FCI_BUILD_DIR/env.sh
+          set -e
+          set -x
+          cd $FCI_BUILD_DIR
+          # agvtool new-version -all $(($BUILD_NUMBER +1))
+          agvtool new-version -all $(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
         script: |
           xcode-project use-profiles
       - name: Get Flutter packages
@@ -50,11 +47,10 @@ workflows:
           cd . && flutter packages pub get
       - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
         script: |
-          source $FCI_BUILD_DIR/env.sh
           flutter build ipa --release \
-            --build-name=1.0.$NEW_BUILD \
-            --build-number=$NEW_BUILD \
-            --export-options-plist=/Users/builder/export_options.plist
+          --build-name=1.0.0 \
+          --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+          --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
           set -e 
