@@ -38,28 +38,20 @@ workflows:
           xcode-project use-profiles
       - name: Get Flutter packages
         script: |
-          cd . && flutter packages pub get      
-      - name: Flutter build ipa and automatic versioning # agvtool new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
+          cd . && flutter packages pub get
+     - name: Increment build number 
         script: |
-          # Get latest TestFlight build number and increment
-          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID")
-          NEW_BUILD=$((LATEST_BUILD + 1))
-          
-          # Get latest version and increment patch number
-          LATEST_VERSION="1.0.$LATEST_BUILD"
-          NEW_VERSION="1.0.$NEW_BUILD"
-          
-          echo "Latest in TestFlight: Version $LATEST_VERSION (Build: $LATEST_BUILD)"
-          echo "Building new: Version $NEW_VERSION (Build: $NEW_BUILD)"
-          
+          cd $CM_BUILD_DIR/ios
+          agvtool new-version -all $(($BUILD_NUMBER + 1)) 
+      - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
+        script: |
           cd ios
-          # Update build number only (not version) in Xcode project
-          agvtool new-version -all $NEW_BUILD
+          agvtool new-version -all 1.0.$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
           cd ..
           
-          flutter build ipa --release \
-            --build-name=$NEW_VERSION \
-            --build-number=$NEW_BUILD \
+          flutter build ipa --release
+            --build-name=1.0.$BUILD_NUMBER 
+            --build-number=$BUILD_NUMBER
             --export-options-plist=/Users/builder/export_options.plist
       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
