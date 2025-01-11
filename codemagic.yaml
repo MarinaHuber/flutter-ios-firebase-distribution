@@ -43,7 +43,7 @@ workflows:
         script: |
           cd $CM_BUILD_DIR/ios
           agvtool new-version -all $(($BUILD_NUMBER + 1)) 
-      - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
+     - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
         script: |
           cd ios
           agvtool new-version -all 1.0.$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
