@@ -41,6 +41,7 @@ workflows:
           cd . && flutter packages pub get      
       - name: Flutter build ipa and automatic versioning # agvtool new-version -all $(($BUILD_NUMBER)) responsible for increasing the version number
         script: |
+          cd ios
           CURRENT_BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" Runner/Info.plist)
           NEW_BUILD_NUMBER=$((CURRENT_BUILD_NUMBER + 1))
           agvtool new-version -all $NEW_BUILD_NUMBER
