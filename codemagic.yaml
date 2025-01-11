@@ -39,11 +39,11 @@ workflows:
       - name: Get Flutter packages
         script: |
           cd . && flutter packages pub get
-     - name: Increment build number 
+      - name: Increment build number 
         script: |
           cd $CM_BUILD_DIR/ios
           agvtool new-version -all $(($BUILD_NUMBER + 1)) 
-     - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
+      - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
         script: |
           cd ios
           agvtool new-version -all 1.0.$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
@@ -53,7 +53,7 @@ workflows:
             --build-name=1.0.$BUILD_NUMBER 
             --build-number=$BUILD_NUMBER
             --export-options-plist=/Users/builder/export_options.plist
-      - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
+       - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
         script: | 
           set -e 
           echo $FIREBASE_SECURE | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
