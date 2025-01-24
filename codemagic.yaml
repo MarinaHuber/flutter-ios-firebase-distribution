@@ -61,10 +61,6 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
     publishing:
-      app_store_connect:              
-        auth: integration
-        submit_to_testflight: false
-        submit_to_app_store: false
       firebase:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
         ios: 
@@ -82,4 +78,4 @@ workflows:
             key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER       # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
             issuer_id: $APP_STORE_CONNECT_ISSUER_ID         # Alphanumeric value that identifies who created the API key, can also reference environment variable such a
             submit_to_testflight: true
-            submit_to_app_store: true      
+            submit_to_app_store: false      
