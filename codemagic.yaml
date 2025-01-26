@@ -52,10 +52,10 @@ workflows:
             --build-name=1.0.$BUILD_NUMBER \
             --build-number=$BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
-      - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
-        script: | 
-          set -e 
-          echo $FIREBASE_SECURE | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
+     # - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
+     #   script: | 
+     #     set -e 
+     #     echo $FIREBASE_SECURE | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -78,4 +78,4 @@ workflows:
             key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER       # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
             issuer_id: $APP_STORE_CONNECT_ISSUER_ID         # Alphanumeric value that identifies who created the API key, can also reference environment variable such a
             submit_to_testflight: true
-            submit_to_app_store: false      
+            submit_to_app_store: true      
