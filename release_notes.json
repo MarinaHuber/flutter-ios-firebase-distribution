@@ -1,6 +1,10 @@
-{
-  {
-    "language": "en-US",
-    "text": "Internal iOS test release"
-  }
-}
+[
+    {
+        "language": "en-GB",
+        "text": "Internal iOS test release",
+        "description": "Updated app description", 
+        "keywords": "keyword, other keyword", 
+        "promotional_text": "Promotional text", 
+        "support_url": "https://example.com" 
+    }
+]
