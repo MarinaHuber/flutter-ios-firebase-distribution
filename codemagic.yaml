@@ -36,13 +36,6 @@ workflows:
         script: |
           echo $CM_CERTIFICATE | base64 --decode > /tmp/certificate.p12
           keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $CM_CERTIFICATE_PASSWORD
-      - name: Increment build number
-        script: |
-          set -e
-          set -x
-          cd $FCI_BUILD_DIR/ios
-          # agvtool new-version -all $(($BUILD_NUMBER +1))
-          agvtool new-version -all $(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
       - name: Get Flutter packages
         script: |
           cd . && flutter packages pub get
@@ -50,7 +43,7 @@ workflows:
         script: |
           agvtool new-version -all $(($BUILD_NUMBER))
           flutter build ipa --release \
-            --build-name=1.0.$BUILD_NUMBER \
+            --build-name=1.$BUILD_NUMBER \
             --build-number=$BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
      # - name: Load Firebase configuration plist # By using base64 you load a JSON file or a plist into a string with no spaces, easier to assign to variables in scripts.
