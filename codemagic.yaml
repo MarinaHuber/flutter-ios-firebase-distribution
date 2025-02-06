@@ -41,7 +41,7 @@ workflows:
           cd . && flutter packages pub get
       - name: Flutter build ipa and automatic versioning # agvtool new-version hardcodes minor vesion
         script: |
-          agvtool new-version -all $(($BUILD_NUMBER))
+          agvtool new-version -all $(($PROJECT_BUILD_NUMBER +1))
           flutter build ipa --release \
             --build-name=1.$BUILD_NUMBER \
             --build-number=$BUILD_NUMBER \
